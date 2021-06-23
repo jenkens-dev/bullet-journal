@@ -2,20 +2,18 @@ import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 
 @Entity()
 export class ToDo {
-
   @PrimaryKey()
   id!: number;
 
-  @Property()
+  @Property({ type: "date" })
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ type: "date", onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
   @Property()
   description!: string;
 
-  @Property()
+  @Property({ default: false })
   isCompleted!: boolean;
-
 }
