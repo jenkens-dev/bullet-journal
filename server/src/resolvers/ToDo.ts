@@ -24,7 +24,7 @@ export class ToDoResolver {
     return todo;
   }
 
-  // updated to update and persist in one query
+  // TASK change to update and persist in one query
   @Mutation(() => ToDo, { nullable: true })
   async updateToDo(
     @Arg("id") id: number,
