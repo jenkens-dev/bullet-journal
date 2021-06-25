@@ -23,4 +23,20 @@ export class ToDoResolver {
     await em.persistAndFlush(todo);
     return todo;
   }
+
+  // updated to update and persist in one query
+  @Mutation(() => ToDo, { nullable: true })
+  async updateToDo(
+    @Arg("id") id: number,
+    @Arg("description") description: string,
+    @Ctx() { em }: MyContext
+  ): Promise<ToDo | null> {
+    const todo = await em.findOne(ToDo, { id });
+    if (!todo) {
+      return null;
+    }
+    todo.description = description;
+    await em.persistAndFlush(todo);
+    return todo;
+  }
 }
