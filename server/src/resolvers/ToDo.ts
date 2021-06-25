@@ -39,4 +39,13 @@ export class ToDoResolver {
     await em.persistAndFlush(todo);
     return todo;
   }
+
+  @Mutation(() => Boolean)
+  async deleteToDo(
+    @Arg("id") id: number,
+    @Ctx() { em }: MyContext
+  ): Promise<boolean> {
+    await em.nativeDelete(ToDo, { id });
+    return true;
+  }
 }
