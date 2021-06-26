@@ -22,16 +22,27 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async register(
     @Arg("username") username: string,
     @Arg("password") password: string,
     @Ctx() { em }: MyContext
-  ): Promise<User> {
+  ): Promise<UserResponse> {
+    const user = await em.findOne(User, { username });
+    if (user) {
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "A user with that username already exists",
+          },
+        ],
+      };
+    }
     const hashedPassword = await argon2.hash(password);
-    const user = em.create(User, { username, password: hashedPassword });
-    await em.persistAndFlush(user);
-    return user;
+    const newUser = em.create(User, { username, password: hashedPassword });
+    await em.persistAndFlush(newUser);
+    return { user: newUser };
   }
 
   @Mutation(() => UserResponse)
