@@ -52,6 +52,28 @@ export class UserResolver {
     @Arg("password") password: string,
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
+    if (username.length <= 2) {
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "length must be greater than 2",
+          },
+        ],
+      };
+    }
+
+    if (password.length <= 2) {
+      return {
+        errors: [
+          {
+            field: "password",
+            message: "length must be greater than 2",
+          },
+        ],
+      };
+    }
+
     const user = await em.findOne(User, { username });
     if (user) {
       return {
