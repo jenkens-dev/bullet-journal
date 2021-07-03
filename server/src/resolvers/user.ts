@@ -10,6 +10,7 @@ import {
 } from "type-graphql";
 import { User } from "../entities/User";
 import argon2 from "argon2";
+// import { EntityManager } from "@mikro-orm/postgresql";
 
 @ObjectType()
 class FieldError {
@@ -88,6 +89,14 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(password);
     const newUser = em.create(User, { username, password: hashedPassword });
     await em.persistAndFlush(newUser);
+
+    // const result = await (em as EntityManager).createQueryBuilder(User).getKnexQuery().insert({
+    //   username,
+    //   password: hashedPassword,
+    //   created_at: new Date(),
+    //   updated_at: new Date()
+    // }).returning("*"); 
+
     // store user id session
     req.session.userId = newUser.id;
     return { user: newUser };
