@@ -30,6 +30,11 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => [User], { nullable: true })
+  async users(@Ctx() { em }: MyContext): Promise<User[] | null> {
+    return em.find(User, {});
+  }
+
   @Query(() => User, { nullable: true })
   async me(@Ctx() { em, req }: MyContext): Promise<User | null> {
     // user not logged in
