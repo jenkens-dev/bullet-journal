@@ -25,8 +25,8 @@ const Register: React.FC<registerProps> = ({}) => {
           }
         }}
       >
-        {({ isSubmitting }) => (
-          <Form>
+        {({ isSubmitting, isValidating }) => (
+          <Form autoComplete="off">
             <InputField
               name="username"
               placeholder="username"
