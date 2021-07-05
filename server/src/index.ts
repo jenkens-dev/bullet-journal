@@ -11,6 +11,7 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import { MyContext } from "./types";
 import cors from "cors";
+import { COOKIE_NAME } from "./constants";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
@@ -30,7 +31,7 @@ const main = async () => {
 
   app.use(
     session({
-      name: "qid",
+      name: COOKIE_NAME,
       store: new RedisStore({ client: redisClient, disableTouch: true }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years

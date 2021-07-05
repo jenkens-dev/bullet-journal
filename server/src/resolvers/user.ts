@@ -10,6 +10,7 @@ import {
 } from "type-graphql";
 import { User } from "../entities/User";
 import argon2 from "argon2";
+import { COOKIE_NAME } from "src/constants";
 // import { EntityManager } from "@mikro-orm/postgresql";
 
 @ObjectType()
@@ -95,7 +96,7 @@ export class UserResolver {
     //   password: hashedPassword,
     //   created_at: new Date(),
     //   updated_at: new Date()
-    // }).returning("*"); 
+    // }).returning("*");
 
     // store user id session
     req.session.userId = newUser.id;
@@ -133,5 +134,20 @@ export class UserResolver {
     // store user id session
     req.session.userId = user.id;
     return { user };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) =>
+      req.session.destroy((err) => {
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+        res.clearCookie(COOKIE_NAME);
+        resolve(true);
+      })
+    );
   }
 }
