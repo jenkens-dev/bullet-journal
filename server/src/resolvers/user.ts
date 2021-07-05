@@ -10,7 +10,7 @@ import {
 } from "type-graphql";
 import { User } from "../entities/User";
 import argon2 from "argon2";
-import { COOKIE_NAME } from "src/constants";
+import { COOKIE_NAME } from "../constants";
 // import { EntityManager } from "@mikro-orm/postgresql";
 
 @ObjectType()
