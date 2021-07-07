@@ -158,6 +158,17 @@ export type MeQuery = (
   )> }
 );
 
+export type TodosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TodosQuery = (
+  { __typename?: 'Query' }
+  & { todos: Array<(
+    { __typename?: 'ToDo' }
+    & Pick<ToDo, 'id' | 'description' | 'isCompleted' | 'createdAt' | 'updatedAt'>
+  )> }
+);
+
 import { IntrospectionQuery } from 'graphql';
 export default {
   "__schema": {
@@ -637,4 +648,19 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const TodosDocument = gql`
+    query Todos {
+  todos {
+    id
+    description
+    isCompleted
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useTodosQuery(options: Omit<Urql.UseQueryArgs<TodosQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<TodosQuery>({ query: TodosDocument, ...options });
 };
