@@ -1,6 +1,4 @@
 import "reflect-metadata";
-import { MikroORM } from "@mikro-orm/core";
-import mikroOrmConfig from "./mikro-orm.config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -24,10 +22,8 @@ const main = async () => {
     password: "postgres",
     logging: true,
     synchronize: true,
-    entities: [ToDo, User]
+    entities: [ToDo, User],
   });
-  const orm = await MikroORM.init(mikroOrmConfig);
-  orm.getMigrator().up();
 
   const app = express();
 
@@ -62,7 +58,7 @@ const main = async () => {
       resolvers: [ToDoResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
+    context: ({ req, res }): MyContext => ({ req, res }),
   });
 
   apolloServer.applyMiddleware({
