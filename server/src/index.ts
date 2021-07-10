@@ -13,6 +13,8 @@ import { MyContext } from "./types";
 import cors from "cors";
 import { COOKIE_NAME } from "./constants";
 import { createConnection } from "typeorm";
+import { ToDo } from "./entities/ToDo";
+import { User } from "./entities/User";
 
 const main = async () => {
   const conn = await createConnection({
@@ -22,7 +24,7 @@ const main = async () => {
     password: "postgres",
     logging: true,
     synchronize: true,
-    entities: []
+    entities: [ToDo, User]
   });
   const orm = await MikroORM.init(mikroOrmConfig);
   orm.getMigrator().up();

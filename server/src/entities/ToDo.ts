@@ -1,26 +1,32 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { ObjectType, Field, Int } from "type-graphql";
 
 @ObjectType()
 @Entity()
 export class ToDo {
   @Field(() => Int)
-  @PrimaryKey()
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Field(() => String)
-  @Property({ type: "date" })
-  createdAt: Date = new Date();
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Field(() => String)
-  @Property({ type: "date", onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Field()
-  @Property()
+  @Column()
   description!: string;
 
   @Field()
-  @Property({ default: false })
+  @Column({ default: false })
   isCompleted!: boolean;
 }
