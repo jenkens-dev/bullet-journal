@@ -39,7 +39,8 @@
     "pg": "^8.6.0",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "typeorm": "^0.2.34"
   },
   "mikro-orm": {
     "useTsNode": true,

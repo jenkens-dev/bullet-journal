@@ -12,8 +12,18 @@ import connectRedis from "connect-redis";
 import { MyContext } from "./types";
 import cors from "cors";
 import { COOKIE_NAME } from "./constants";
+import { createConnection } from "typeorm";
 
 const main = async () => {
+  const conn = await createConnection({
+    type: "postgres",
+    database: "bulletjournal2",
+    username: "postgres",
+    password: "postgres",
+    logging: true,
+    synchronize: true,
+    entities: []
+  });
   const orm = await MikroORM.init(mikroOrmConfig);
   orm.getMigrator().up();
 
