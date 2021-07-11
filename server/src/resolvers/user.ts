@@ -74,7 +74,7 @@ export class UserResolver {
       };
     }
 
-    const user = await User.findOne({ where: username });
+    const user = await User.findOne({ where: { username } });
     if (user) {
       return {
         errors: [
@@ -102,7 +102,7 @@ export class UserResolver {
     @Arg("password") password: string,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    const user = await User.findOne({ where: username });
+    const user = await User.findOne({ where: { username } });
     if (!user) {
       return {
         errors: [
