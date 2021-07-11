@@ -11,7 +11,6 @@ import {
 import { User } from "../entities/User";
 import argon2 from "argon2";
 import { COOKIE_NAME } from "../constants";
-// import { EntityManager } from "@mikro-orm/postgresql";
 
 @ObjectType()
 class FieldError {
@@ -33,26 +32,25 @@ class UserResponse {
 @Resolver()
 export class UserResolver {
   // remove later
-  @Query(() => [User], { nullable: true })
-  async users(@Ctx() { em }: MyContext): Promise<User[] | null> {
-    return em.find(User, {});
+  @Query(() => [User])
+  async users(): Promise<User[]> {
+    return User.find();
   }
 
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { em, req }: MyContext): Promise<User | null> {
+  me(@Ctx() { req }: MyContext) {
     // user not logged in
     if (!req.session.userId) {
       return null;
     }
-    const user = await em.findOne(User, { id: req.session.userId });
-    return user;
+    return User.findOne(req.session.id);
   }
 
   @Mutation(() => UserResponse)
   async register(
     @Arg("username") username: string,
     @Arg("password") password: string,
-    @Ctx() { em, req }: MyContext
+    @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     if (username.length <= 2) {
       return {
@@ -76,7 +74,7 @@ export class UserResolver {
       };
     }
 
-    const user = await em.findOne(User, { username });
+    const user = await User.findOne({ where: username });
     if (user) {
       return {
         errors: [
@@ -88,15 +86,10 @@ export class UserResolver {
       };
     }
     const hashedPassword = await argon2.hash(password);
-    const newUser = em.create(User, { username, password: hashedPassword });
-    await em.persistAndFlush(newUser);
-
-    // const result = await (em as EntityManager).createQueryBuilder(User).getKnexQuery().insert({
-    //   username,
-    //   password: hashedPassword,
-    //   created_at: new Date(),
-    //   updated_at: new Date()
-    // }).returning("*");
+    const newUser = await User.create({
+      username,
+      password: hashedPassword,
+    }).save();
 
     // store user id session
     req.session.userId = newUser.id;
@@ -107,9 +100,9 @@ export class UserResolver {
   async login(
     @Arg("username") username: string,
     @Arg("password") password: string,
-    @Ctx() { em, req }: MyContext
+    @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, { username });
+    const user = await User.findOne({ where: username });
     if (!user) {
       return {
         errors: [
