@@ -24,11 +24,13 @@ export class ToDoResolver {
     @Arg("description") description: string
   ): Promise<ToDo | null> {
     const todo = await ToDo.findOne(id);
+
     if (!todo) {
       return null;
     }
-    await ToDo.update({ id }, { description });
-    return todo;
+
+    todo.description = description;
+    return await ToDo.save(todo);
   }
 
   @Mutation(() => Boolean)
