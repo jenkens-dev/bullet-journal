@@ -13,4 +13,4 @@ So I made this as a place to look back on my progress and stay consistent in my 
 - React Testing Library
 - Node.js
 - PostgreSQL
-- MikroORM
+- TypeORM
